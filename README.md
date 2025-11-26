@@ -11,21 +11,6 @@
 
 ---
 
-## 📋 1.1 PORTADA
-
-| **Campo** | **Detalle** |
-|-----------|-------------|
-| **Nombre del Estudiante** | [Completar con nombre completo] |
-| **Carrera** | [Completar carrera] |
-| **Ciclo** | 4to Ciclo |
-| **Curso** | Desarrollo de Software Web |
-| **Sección** | [Completar sección] |
-| **Docente** | [Completar nombre del docente] |
-| **Proyecto** | Sistema de Gestión de Biblioteca - Autores y Libros |
-| **Fecha de Entrega** | 26 de Noviembre de 2025 |
-| **Versión** | 1.0.0 |
-
----
 
 ## 📖 1.2 INTRODUCCIÓN DEL PROYECTO
 
