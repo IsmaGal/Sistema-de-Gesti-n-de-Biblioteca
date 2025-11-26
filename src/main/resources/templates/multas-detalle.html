@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de la Multa - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Detalle de la Multa</h2>
+            <div>
+                <a th:href="@{/multas}" class="btn btn-secondary">← Volver al Listado</a>
+                <a th:if="${!multa.pagado}"
+                   th:href="@{/multas/pagar/{id}(id=${multa.id})}"
+                   class="btn btn-primary">Pagar Multa</a>
+            </div>
+        </div>
+
+        <div class="detail-container">
+            <div class="detail-card">
+                <h3>Información de la Multa</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">ID:</span>
+                        <span class="detail-value" th:text="${multa.id}">ID</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Monto:</span>
+                        <span class="detail-value" th:text="${'S/. ' + multa.monto}">Monto</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Estado:</span>
+                        <span th:class="${multa.pagado ? 'badge badge-active' : 'badge badge-inactive'}"
+                              th:text="${multa.pagado ? 'Pagada' : 'Pendiente'}">Estado</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <h3>Información del Préstamo</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">ID Préstamo:</span>
+                        <span class="detail-value" th:text="${multa.prestamoId}">ID</span>
+                    </div>
+                    <div class="detail-item full-width">
+                        <a th:href="@{/prestamos/detalle/{id}(id=${multa.prestamoId})}"
+                           class="btn btn-small">Ver Detalle del Préstamo →</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <h3>Información del Usuario</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Usuario:</span>
+                        <span class="detail-value" th:text="${multa.prestamoUsuarioNombre ?: 'Sin usuario'}">Usuario</span>
+                    </div>
+                    <div class="detail-item full-width">
+                        <a th:if="${multa.prestamoUsuarioId != null}"
+                           th:href="@{/usuarios/detalle/{id}(id=${multa.prestamoUsuarioId})}"
+                           class="btn btn-small">Ver Perfil del Usuario →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Gestión de Biblioteca</p>
+        </div>
+    </footer>
+</body>
+</html>

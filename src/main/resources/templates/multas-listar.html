@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Multas - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Gestión de Multas</h2>
+        </div>
+
+        <div th:if="${mensaje}" th:class="${'alert alert-' + tipo}" th:text="${mensaje}"></div>
+
+        <div class="search-section">
+            <div class="filter-section">
+                <label>Filtrar por estado:</label>
+                <div class="filter-buttons">
+                    <a th:href="@{/multas}" class="filter-btn" th:classappend="${param.pagado == null ? 'active' : ''}">Todas</a>
+                    <a th:href="@{/multas(pagado=false)}" class="filter-btn" th:classappend="${param.pagado != null && param.pagado[0] == 'false' ? 'active' : ''}">Pendientes</a>
+                    <a th:href="@{/multas(pagado=true)}" class="filter-btn" th:classappend="${param.pagado != null && param.pagado[0] == 'true' ? 'active' : ''}">Pagadas</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Préstamo</th>
+                        <th>Monto</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${multas == null || multas.empty}">
+                        <td colspan="6" style="text-align: center;">No hay multas registradas</td>
+                    </tr>
+                    <tr th:each="multa : ${multas}">
+                        <td th:text="${multa.id}">ID</td>
+                        <td th:text="${multa.prestamoUsuarioNombre ?: 'Sin usuario'}">Usuario</td>
+                        <td th:text="${'Préstamo #' + multa.prestamoId}">Préstamo</td>
+                        <td th:text="${'S/. ' + multa.monto}">Monto</td>
+                        <td>
+                            <span th:class="${multa.pagado ? 'badge badge-active' : 'badge badge-inactive'}"
+                                  th:text="${multa.pagado ? 'Pagada' : 'Pendiente'}">Estado</span>
+                        </td>
+                        <td class="actions">
+                            <a th:href="@{/multas/detalle/{id}(id=${multa.id})}" class="btn-action btn-view">Ver</a>
+                            <a th:if="${!multa.pagado}"
+                               th:href="@{/multas/pagar/{id}(id=${multa.id})}"
+                               class="btn-action btn-edit">Pagar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Gestión de Biblioteca</p>
+        </div>
+    </footer>
+</body>
+</html>

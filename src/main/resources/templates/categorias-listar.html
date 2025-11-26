@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Categorías - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link active">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Gestión de Categorías</h2>
+            <a th:href="@{/categorias/registrar}" class="btn btn-primary">+ Registrar Categoría</a>
+        </div>
+
+        <div th:if="${mensaje}" th:class="${'alert alert-' + tipo}" th:text="${mensaje}"></div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${categorias == null || categorias.empty}">
+                        <td colspan="4" style="text-align: center;">No hay categorías registradas</td>
+                    </tr>
+                    <tr th:each="categoria : ${categorias}">
+                        <td th:text="${categoria.id}">ID</td>
+                        <td th:text="${categoria.nombre}">Nombre</td>
+                        <td>
+                            <span th:class="${categoria.activo ? 'badge badge-active' : 'badge badge-inactive'}"
+                                  th:text="${categoria.activo ? 'Activo' : 'Inactivo'}">Estado</span>
+                        </td>
+                        <td class="actions">
+                            <a th:href="@{/categorias/detalle/{id}(id=${categoria.id})}" class="btn-action btn-view">Ver</a>
+                            <a th:href="@{/categorias/editar/{id}(id=${categoria.id})}" class="btn-action btn-edit">Editar</a>
+                            <form th:if="${categoria.activo}" th:action="@{/categorias/inactivar/{id}(id=${categoria.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn-action btn-delete" onclick="return confirm('¿Está seguro de inactivar esta categoría?')">Inactivar</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Gestión de Biblioteca</p>
+        </div>
+    </footer>
+</body>
+</html>

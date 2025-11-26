@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inactivar Autor - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link active">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Confirmar Inactivación</h2>
+            <a th:href="@{/autores}" class="btn btn-secondary">← Volver al Listado</a>
+        </div>
+
+        <div class="confirmation-box">
+            <div class="warning-icon">⚠️</div>
+            <h3>¿Está seguro que desea inactivar este autor?</h3>
+
+            <div class="detail-card">
+                <div class="detail-item">
+                    <span class="detail-label">Nombre:</span>
+                    <span class="detail-value" th:text="${autor.nombre + ' ' + autor.apellidos}">Nombre</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Nacionalidad:</span>
+                    <span class="detail-value" th:text="${autor.nacionalidad ?: 'No especificada'}">Nacionalidad</span>
+                </div>
+            </div>
+
+            <p class="warning-message">
+                Al inactivar este autor, no aparecerá en las búsquedas activas del sistema.
+                Esta acción es reversible desde la edición del autor.
+            </p>
+
+            <form th:action="@{/autores/inactivar/{id}(id=${autor.id})}" method="post" class="form-actions">
+                <button type="submit" class="btn btn-danger">Sí, Inactivar Autor</button>
+                <a th:href="@{/autores}" class="btn btn-cancel">Cancelar</a>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Gestión de Biblioteca</p>
+        </div>
+    </footer>
+</body>
+</html>

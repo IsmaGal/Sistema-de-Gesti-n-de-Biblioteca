@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Libro - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link active">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Detalle del Libro</h2>
+            <div>
+                <a th:href="@{/libros}" class="btn btn-secondary">← Volver al Listado</a>
+                <a th:href="@{/libros/editar/{id}(id=${libro.id})}" class="btn btn-primary">Editar</a>
+            </div>
+        </div>
+
+        <div class="detail-container">
+            <div class="detail-card">
+                <h3>Información del Libro</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">ID:</span>
+                        <span class="detail-value" th:text="${libro.id}">ID</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Título:</span>
+                        <span class="detail-value" th:text="${libro.titulo}">Título</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Descripción:</span>
+                        <span class="detail-value" th:text="${libro.descripcion ?: 'Sin descripción'}">Descripción</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Año de Publicación:</span>
+                        <span class="detail-value" th:text="${libro.anioPublicacion}">Año</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Estado:</span>
+                        <span th:class="${libro.activo ? 'badge badge-active' : 'badge badge-inactive'}"
+                              th:text="${libro.activo ? 'Activo' : 'Inactivo'}">Estado</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <h3>Información del Autor</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Autor:</span>
+                        <span class="detail-value" th:text="${libro.autorNombre ?: 'Sin autor'}">Autor</span>
+                    </div>
+                    <div class="detail-item full-width">
+                        <a th:if="${libro.autorId != null}"
+                           th:href="@{/autores/detalle/{id}(id=${libro.autorId})}"
+                           class="btn btn-small">Ver Perfil del Autor →</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <h3>Categoría</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Categoría:</span>
+                        <span class="detail-value" th:text="${libro.categoriaNombre ?: 'Sin categoría'}">Categoría</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <h3>Ejemplares Disponibles</h3>
+                <div class="detail-item full-width">
+                    <a th:href="@{/ejemplares/registrar(libroId=${libro.id})}" class="btn btn-small btn-primary">+ Agregar Ejemplar</a>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Estado</th>
+                                <th>Ubicación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${ejemplares == null || ejemplares.empty}">
+                                <td colspan="4" style="text-align: center;">No hay ejemplares registrados para este libro</td>
+                            </tr>
+                            <tr th:each="ejemplar : ${ejemplares}">
+                                <td th:text="${ejemplar.id}">ID</td>
+                                <td th:text="${ejemplar.estado}">Estado</td>
+                                <td th:text="${ejemplar.ubicacion}">Ubicación</td>
+                                <td class="actions">
+                                    <a th:href="@{/ejemplares/editar/{id}(id=${ejemplar.id})}" class="btn-action btn-edit">Editar</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Gestión de Biblioteca</p>
+        </div>
+    </footer>
+</body>
+</html>

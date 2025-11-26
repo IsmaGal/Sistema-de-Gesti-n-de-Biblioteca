@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devolver Préstamo - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link active">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Registrar Devolución</h2>
+            <a th:href="@{/prestamos}" class="btn btn-secondary">← Volver al Listado</a>
+        </div>
+
+        <div class="confirmation-box">
+            <div class="warning-icon">📖</div>
+            <h3>¿Confirmar devolución del libro?</h3>
+
+            <div class="detail-card">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Usuario:</span>
+                        <span class="detail-value" th:text="${prestamo.usuarioNombre}">Usuario</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Libro:</span>
+                        <span class="detail-value" th:text="${prestamo.ejemplarLibroTitulo}">Libro</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Fecha de Préstamo:</span>
+                        <span class="detail-value" th:text="${#temporals.format(prestamo.fechaPrestamo, 'dd/MM/yyyy')}">Fecha</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Fecha de Devolución Esperada:</span>
+                        <span class="detail-value" th:text="${#temporals.format(prestamo.fechaDevolucionEsperada, 'dd/MM/yyyy')}">Fecha</span>
+                    </div>
+                </div>
+            </div>
+
+            <p class="warning-message">
+                Al confirmar la devolución, se registrará la fecha actual como fecha de devolución real
+                y el préstamo se marcará como finalizado.
+            </p>
+
+            <form th:action="@{/prestamos/devolver/{id}(id=${prestamo.id})}" method="post" class="form-actions">
+                <button type="submit" class="btn btn-primary">Confirmar Devolución</button>
+                <a th:href="@{/prestamos}" class="btn btn-cancel">Cancelar</a>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Gestión de Biblioteca</p>
+        </div>
+    </footer>
+</body>
+</html>

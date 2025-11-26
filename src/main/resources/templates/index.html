@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Virtual - Sistema de Gestión</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link active">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h2 style="color: currentColor">Sistema Integral de Gestión Bibliotecaria</h2>
+            <p style="color: currentColor">Administración completa de libros, autores, préstamos y usuarios</p>
+        </section>
+
+        <section class="dashboard">
+            <div class="card-grid">
+                <a th:href="@{/libros}" class="dashboard-card">
+                    <div class="card-icon">📚</div>
+                    <h3>Catálogo de Libros</h3>
+                    <p>Gestionar el inventario completo de libros</p>
+                    <div class="card-stat" th:text="${totalLibros != null ? totalLibros + ' libros registrados' : 'Cargando...'}">0 libros registrados</div>
+                    <span class="card-arrow">→</span>
+                </a>
+
+                <a th:href="@{/autores}" class="dashboard-card">
+                    <div class="card-icon">✍️</div>
+                    <h3>Autores</h3>
+                    <p>Administrar autores y sus obras</p>
+                    <div class="card-stat" th:text="${totalAutores != null ? totalAutores + ' autores registrados' : 'Cargando...'}">0 autores registrados</div>
+                    <span class="card-arrow">→</span>
+                </a>
+
+                <a th:href="@{/usuarios}" class="dashboard-card">
+                    <div class="card-icon">👥</div>
+                    <h3>Usuarios</h3>
+                    <p>Administrar lectores y sus datos de contacto</p>
+                    <div class="card-stat" th:text="${totalUsuarios != null ? totalUsuarios + ' usuarios registrados' : 'Cargando...'}">0 usuarios registrados</div>
+                    <span class="card-arrow">→</span>
+                </a>
+
+                <a th:href="@{/prestamos}" class="dashboard-card">
+                    <div class="card-icon">📖</div>
+                    <h3>Préstamos</h3>
+                    <p>Control de préstamos y devoluciones</p>
+                    <div class="card-stat" th:text="${prestamosActivos != null ? prestamosActivos + ' préstamos activos' : 'Cargando...'}">0 préstamos activos</div>
+                    <span class="card-arrow">→</span>
+                </a>
+
+                <a th:href="@{/categorias}" class="dashboard-card">
+                    <div class="card-icon">🏷️</div>
+                    <h3>Categorías</h3>
+                    <p>Organizar libros por categorías</p>
+                    <span class="card-arrow">→</span>
+                </a>
+
+                <a th:href="@{/multas}" class="dashboard-card">
+                    <div class="card-icon">💰</div>
+                    <h3>Multas</h3>
+                    <p>Gestión de multas por retrasos</p>
+                    <span class="card-arrow">→</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Gestión de Biblioteca</p>
+        </div>
+    </footer>
+</body>
+</html>

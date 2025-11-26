@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Ejemplar - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link active">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Registrar Nuevo Ejemplar</h2>
+            <a th:href="@{/libros/detalle/{id}(id=${ejemplar.libroId})}"
+               th:if="${ejemplar.libroId != null}"
+               class="btn btn-secondary">← Volver al Libro</a>
+            <a th:href="@{/libros}"
+               th:if="${ejemplar.libroId == null}"
+               class="btn btn-secondary">← Volver al Catálogo</a>
+        </div>
+
+        <div th:if="${mensaje}" th:class="${'alert alert-' + tipo}" th:text="${mensaje}"></div>
+
+        <div class="form-container">
+            <form class="data-form" th:action="@{/ejemplares/registrar}" th:object="${ejemplar}" method="post">
+                <div class="form-group">
+                    <label for="libroId">Libro *</label>
+                    <select id="libroId" th:field="*{libroId}" required>
+                        <option value="">Seleccione un libro</option>
+                        <option th:each="libro : ${libros}"
+                                th:value="${libro.id}"
+                                th:text="${libro.titulo + ' - ' + libro.autorNombre}"
+                                th:selected="${libro.id == ejemplar.libroId}">
+                            Libro
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="estado">Estado del Ejemplar *</label>
+                    <select id="estado" th:field="*{estado}" required>
+                        <option value="Disponible">Disponible</option>
+                        <option value="Prestado">Prestado</option>
+                        <option value="Reparacion">En Reparación</option>
+                        <option value="Perdido">Perdido</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ubicacion">Ubicación (Estante/Pasillo)</label>
+                    <input type="text" id="ubicacion" th:field="*{ubicacion}" placeholder="Ej: Estante A-12">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Guardar Ejemplar</button>
+                    <a th:href="@{/libros/detalle/{id}(id=${ejemplar.libroId})}"
+                       th:if="${ejemplar.libroId != null}"
+                       class="btn btn-cancel">Cancelar</a>
+                    <a th:href="@{/libros}"
+                       th:if="${ejemplar.libroId == null}"
+                       class="btn btn-cancel">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Biblioteca Virtual - Sistema de Gestión Integral</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Préstamos - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link active">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Gestión de Préstamos</h2>
+            <a th:href="@{/prestamos/registrar}" class="btn btn-primary">+ Registrar Préstamo</a>
+        </div>
+
+        <div th:if="${mensaje}" th:class="${'alert alert-' + tipo}" th:text="${mensaje}"></div>
+
+        <div class="search-section">
+            <div class="filter-section">
+                <label>Filtrar por estado:</label>
+                <div class="filter-buttons">
+                    <a th:href="@{/prestamos}" class="filter-btn" th:classappend="${param.estado == null ? 'active' : ''}">Todos</a>
+                    <a th:href="@{/prestamos(estado='activos')}" class="filter-btn" th:classappend="${param.estado != null && param.estado[0] == 'activos' ? 'active' : ''}">Activos</a>
+                    <a th:href="@{/prestamos(estado='atrasados')}" class="filter-btn" th:classappend="${param.estado != null && param.estado[0] == 'atrasados' ? 'active' : ''}">Atrasados</a>
+                    <a th:href="@{/prestamos(estado='Finalizado')}" class="filter-btn" th:classappend="${param.estado != null && param.estado[0] == 'Finalizado' ? 'active' : ''}">Finalizados</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Libro</th>
+                        <th>Fecha Préstamo</th>
+                        <th>Fecha Devolución Esperada</th>
+                        <th>Fecha Devolución Real</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${prestamos == null || prestamos.empty}">
+                        <td colspan="8" style="text-align: center;">No hay préstamos registrados</td>
+                    </tr>
+                    <tr th:each="prestamo : ${prestamos}">
+                        <td th:text="${prestamo.id}">ID</td>
+                        <td th:text="${prestamo.usuarioNombre ?: 'Sin usuario'}">Usuario</td>
+                        <td th:text="${prestamo.ejemplarLibroTitulo ?: 'Sin libro'}">Libro</td>
+                        <td th:text="${#temporals.format(prestamo.fechaPrestamo, 'dd/MM/yyyy')}">Fecha</td>
+                        <td th:text="${#temporals.format(prestamo.fechaDevolucionEsperada, 'dd/MM/yyyy')}">Fecha</td>
+                        <td th:text="${prestamo.fechaDevolucionReal != null ? #temporals.format(prestamo.fechaDevolucionReal, 'dd/MM/yyyy') : '-'}">-</td>
+                        <td>
+                            <span th:class="${prestamo.estado == 'Activo' ? 'badge badge-active' : 'badge badge-inactive'}"
+                                  th:text="${prestamo.estado}">Estado</span>
+                        </td>
+                        <td class="actions">
+                            <a th:href="@{/prestamos/detalle/{id}(id=${prestamo.id})}" class="btn-action btn-view">Ver</a>
+                            <a th:if="${prestamo.estado == 'Activo'}"
+                               th:href="@{/prestamos/devolver/{id}(id=${prestamo.id})}"
+                               class="btn-action btn-edit">Devolver</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Gestión de Biblioteca</p>
+        </div>
+    </footer>
+</body>
+</html>

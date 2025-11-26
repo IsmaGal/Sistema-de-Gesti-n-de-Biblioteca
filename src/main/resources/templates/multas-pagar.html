@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagar Multa - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Pagar Multa</h2>
+            <a th:href="@{/multas}" class="btn btn-secondary">← Volver al Listado</a>
+        </div>
+
+        <div class="confirmation-box">
+            <div class="warning-icon">💰</div>
+            <h3>¿Confirmar pago de multa?</h3>
+
+            <div class="detail-card">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Monto a Pagar:</span>
+                        <span class="detail-value" th:text="${'S/. ' + multa.monto}" style="font-size: 1.5em; font-weight: bold; color: #e74c3c;">Monto</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Usuario:</span>
+                        <span class="detail-value" th:text="${multa.prestamoUsuarioNombre}">Usuario</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">ID Préstamo:</span>
+                        <span class="detail-value" th:text="${multa.prestamoId}">ID</span>
+                    </div>
+                </div>
+            </div>
+
+            <p class="warning-message">
+                Al confirmar el pago, la multa se marcará como pagada y no podrá revertirse esta acción.
+            </p>
+
+            <form th:action="@{/multas/pagar/{id}(id=${multa.id})}" method="post" class="form-actions">
+                <button type="submit" class="btn btn-primary">Confirmar Pago</button>
+                <a th:href="@{/multas}" class="btn btn-cancel">Cancelar</a>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Gestión de Biblioteca</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Préstamo - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link active">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Detalle del Préstamo</h2>
+            <div>
+                <a th:href="@{/prestamos}" class="btn btn-secondary">← Volver al Listado</a>
+                <a th:if="${prestamo.estado == 'Activo'}"
+                   th:href="@{/prestamos/devolver/{id}(id=${prestamo.id})}"
+                   class="btn btn-primary">Registrar Devolución</a>
+            </div>
+        </div>
+
+        <div class="detail-container">
+            <div class="detail-card">
+                <h3>Información del Préstamo</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">ID:</span>
+                        <span class="detail-value" th:text="${prestamo.id}">ID</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Fecha de Préstamo:</span>
+                        <span class="detail-value" th:text="${#temporals.format(prestamo.fechaPrestamo, 'dd/MM/yyyy HH:mm')}">Fecha</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Fecha de Devolución Esperada:</span>
+                        <span class="detail-value" th:text="${#temporals.format(prestamo.fechaDevolucionEsperada, 'dd/MM/yyyy HH:mm')}">Fecha</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Fecha de Devolución Real:</span>
+                        <span class="detail-value" th:text="${prestamo.fechaDevolucionReal != null ? #temporals.format(prestamo.fechaDevolucionReal, 'dd/MM/yyyy HH:mm') : 'Pendiente'}">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Estado:</span>
+                        <span th:class="${prestamo.estado == 'Activo' ? 'badge badge-active' : 'badge badge-inactive'}"
+                              th:text="${prestamo.estado}">Estado</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <h3>Información del Usuario</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Nombre:</span>
+                        <span class="detail-value" th:text="${prestamo.usuarioNombre ?: 'Sin usuario'}">Usuario</span>
+                    </div>
+                    <div class="detail-item full-width">
+                        <a th:if="${prestamo.usuarioId != null}"
+                           th:href="@{/usuarios/detalle/{id}(id=${prestamo.usuarioId})}"
+                           class="btn btn-small">Ver Perfil Completo →</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <h3>Información del Ejemplar</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Libro:</span>
+                        <span class="detail-value" th:text="${prestamo.ejemplarLibroTitulo ?: 'Sin libro'}">Libro</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">ID Ejemplar:</span>
+                        <span class="detail-value" th:text="${prestamo.ejemplarId}">ID</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Gestión de Biblioteca</p>
+        </div>
+    </footer>
+</body>
+</html>

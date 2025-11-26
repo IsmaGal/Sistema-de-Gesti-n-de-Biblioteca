@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Usuario - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link active">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Detalle del Usuario</h2>
+            <div>
+                <a th:href="@{/prestamos/nuevo(idUsuario=${usuario.id})}" class="btn btn-primary">Nuevo Préstamo</a>
+                <a th:href="@{/usuarios/{id}/editar(id=${usuario.id})}" class="btn btn-secondary">Editar</a>
+                <a th:href="@{/usuarios}" class="btn btn-secondary">← Volver</a>
+            </div>
+        </div>
+
+        <div class="detail-container">
+            <div class="detail-card">
+                <h3>Información Personal</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">ID:</span>
+                        <span class="detail-value" th:text="${usuario.id}"></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Nombre Completo:</span>
+                        <span class="detail-value" th:text="${usuario.nombre + ' ' + usuario.apellido}"></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value" th:text="${usuario.email}"></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Fecha de Registro:</span>
+                        <span class="detail-value" th:text="${#temporals.format(usuario.fechaRegistro, 'dd \'de\' MMMM, yyyy', new java.util.Locale('es', 'ES'))}"></span>
+                    </div>
+                    <div class="detail-item full-width">
+                        <span class="detail-label">Dirección:</span>
+                        <span class="detail-value" th:text="${usuario.direccion ?: 'N/A'}"></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Estado:</span>
+                        <span th:class="${usuario.activo} ? 'badge badge-active' : 'badge badge-inactive'"
+                              th:text="${usuario.activo} ? 'Activo' : 'Inactivo'"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <div class="card-header">
+                    <h3 th:text="'Préstamos Activos (' + ${#lists.size(prestamosActivos)} + ')'"></h3>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Libro</th>
+                                <th>Fecha Préstamo</th>
+                                <th>Fecha Devolución</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="prestamo : ${prestamosActivos}">
+                                <td th:text="${prestamo.idPrestamo}"></td>
+                                <td th:text="${prestamo.ejemplar.libro.titulo}"></td>
+                                <td th:text="${#temporals.format(prestamo.fechaPrestamo, 'dd/MM/yyyy')}"></td>
+                                <td th:text="${#temporals.format(prestamo.fechaDevolucionEsperada, 'dd/MM/yyyy')}"></td>
+                                <td><span class="badge badge-prestado">Activo</span></td>
+                                <td class="actions">
+                                    <a th:href="@{/prestamos/{id}(id=${prestamo.idPrestamo})}" class="btn-action btn-view">Ver</a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(prestamosActivos)}">
+                                <td colspan="6" style="text-align: center; padding: 20px;">No hay préstamos activos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <div class="card-header">
+                    <h3 th:text="'Historial de Préstamos (' + ${#lists.size(historialPrestamos)} + ')'"></h3>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Libro</th>
+                                <th>Fecha Préstamo</th>
+                                <th>Fecha Devolución</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="prestamo : ${historialPrestamos}">
+                                <td th:text="${prestamo.idPrestamo}"></td>
+                                <td th:text="${prestamo.ejemplar.libro.titulo}"></td>
+                                <td th:text="${#temporals.format(prestamo.fechaPrestamo, 'dd/MM/yyyy')}"></td>
+                                <td th:text="${prestamo.fechaDevolucionReal != null ? #temporals.format(prestamo.fechaDevolucionReal, 'dd/MM/yyyy') : 'N/A'}"></td>
+                                <td>
+                                    <span th:if="${prestamo.fechaDevolucionReal != null && prestamo.fechaDevolucionReal.isAfter(prestamo.fechaDevolucionEsperada)}" class="badge badge-fuera">Atrasado</span>
+                                    <span th:if="${prestamo.fechaDevolucionReal != null && !prestamo.fechaDevolucionReal.isAfter(prestamo.fechaDevolucionEsperada)}" class="badge badge-disponible">Finalizado</span>
+                                    <span th:if="${prestamo.fechaDevolucionReal == null}" class="badge badge-prestado">Activo</span>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(historialPrestamos)}">
+                                <td colspan="5" style="text-align: center; padding: 20px;">No hay historial de préstamos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <div class="card-header">
+                    <h3 th:text="'Multas (' + ${#lists.size(multas)} + ')'"></h3>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Préstamo</th>
+                                <th>Monto</th>
+                                <th>Fecha Generación</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="multa : ${multas}">
+                                <td th:text="${multa.idMulta}"></td>
+                                <td th:text="${multa.prestamo.idPrestamo}"></td>
+                                <td th:text="'S/ ' + ${#numbers.formatDecimal(multa.monto, 1, 2)}"></td>
+                                <td th:text="${#temporals.format(multa.fechaGeneracion, 'dd/MM/yyyy')}"></td>
+                                <td>
+                                    <span th:class="${multa.pagado} ? 'badge badge-disponible' : 'badge badge-fuera'"
+                                          th:text="${multa.pagado} ? 'Pagado' : 'Pendiente'"></span>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(multas)}">
+                                <td colspan="5" style="text-align: center; padding: 20px;">No hay multas registradas</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Biblioteca Virtual - Sistema de Gestión Integral</p>
+        </div>
+    </footer>
+</body>
+</html>

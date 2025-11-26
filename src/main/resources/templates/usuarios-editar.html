@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuario - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link active">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Editar Usuario</h2>
+            <a th:href="@{/usuarios}" class="btn btn-secondary">← Volver</a>
+        </div>
+
+        <div class="form-container">
+            <form class="data-form" th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post">
+                <input type="hidden" th:field="*{id}">
+                <input type="hidden" th:field="*{fechaRegistro}">
+
+                <div class="form-group">
+                    <label for="id">ID de Usuario</label>
+                    <input type="text" id="id_display" th:value="*{id}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre">Nombre *</label>
+                    <input type="text" id="nombre" th:field="*{nombre}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="apellido">Apellido *</label>
+                    <input type="text" id="apellido" th:field="*{apellido}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo Electrónico *</label>
+                    <input type="email" id="email" th:field="*{email}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" id="direccion" th:field="*{direccion}">
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha_registro">Fecha de Registro</label>
+                    <input type="text" id="fecha_registro" th:value="${#temporals.format(usuario.fechaRegistro, 'dd/MM/yyyy')}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="activo">Estado *</label>
+                    <select id="activo" th:field="*{activo}" required>
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
+                    <a th:href="@{/usuarios}" class="btn btn-cancel">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Biblioteca Virtual - Sistema de Gestión Integral</p>
+        </div>
+    </footer>
+</body>
+</html>

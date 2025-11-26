@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Autores - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link active">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Gestión de Autores</h2>
+            <a th:href="@{/autores/registrar}" class="btn btn-primary">+ Registrar Autor</a>
+        </div>
+
+        <!-- Mensaje de éxito/error -->
+        <div th:if="${mensaje}" th:class="${'alert alert-' + tipo}" th:text="${mensaje}"></div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre Completo</th>
+                        <th>Nacionalidad</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${autores.empty}">
+                        <td colspan="5" style="text-align: center;">No hay autores registrados</td>
+                    </tr>
+                    <tr th:each="autor : ${autores}">
+                        <td th:text="${autor.id}">ID</td>
+                        <td th:text="${autor.nombre + ' ' + autor.apellidos}">Nombre</td>
+                        <td th:text="${autor.nacionalidad ?: 'No especificada'}">Nacionalidad</td>
+                        <td>
+                            <span th:class="${autor.activo ? 'badge badge-active' : 'badge badge-inactive'}"
+                                  th:text="${autor.activo ? 'Activo' : 'Inactivo'}">Estado</span>
+                        </td>
+                        <td class="actions">
+                            <a th:href="@{/autores/detalle/{id}(id=${autor.id})}" class="btn-action btn-view">Ver</a>
+                            <a th:href="@{/autores/editar/{id}(id=${autor.id})}" class="btn-action btn-edit">Editar</a>
+                            <a th:if="${autor.activo}" th:href="@{/autores/inactivar/{id}(id=${autor.id})}" class="btn-action btn-delete">Inactivar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <a href="#" class="page-link disabled">← Anterior</a>
+            <a href="#" class="page-link active">1</a>
+            <a href="#" class="page-link">2</a>
+            <a href="#" class="page-link">3</a>
+            <a href="#" class="page-link">Siguiente →</a>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Gestión de Biblioteca</p>
+        </div>
+    </footer>
+</body>
+</html>

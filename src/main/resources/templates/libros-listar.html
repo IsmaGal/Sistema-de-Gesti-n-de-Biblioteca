@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Libros - Biblioteca</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Biblioteca Virtual</h1>
+            <nav>
+                <a th:href="@{/}" class="nav-link">Inicio</a>
+                <a th:href="@{/libros}" class="nav-link active">Catálogo</a>
+                <a th:href="@{/autores}" class="nav-link">Autores</a>
+                <a th:href="@{/categorias}" class="nav-link">Categorías</a>
+                <a th:href="@{/usuarios}" class="nav-link">Usuarios</a>
+                <a th:href="@{/prestamos}" class="nav-link">Préstamos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Gestión de Libros</h2>
+            <a th:href="@{/libros/registrar}" class="btn btn-primary">+ Registrar Libro</a>
+        </div>
+
+        <!-- Mensaje de éxito/error -->
+        <div th:if="${mensaje}" th:class="${'alert alert-' + tipo}" th:text="${mensaje}"></div>
+
+        <div class="search-section">
+            <form class="search-form" th:action="@{/libros}" method="get">
+                <input type="text" name="titulo" placeholder="Buscar por título..." class="search-input" th:value="${param.titulo}">
+                <button type="submit" class="btn btn-secondary">Buscar</button>
+            </form>
+            
+            <div class="filter-section">
+                <label>Filtrar por estado:</label>
+                <div class="filter-buttons">
+                    <a th:href="@{/libros}" class="filter-btn" th:classappend="${param.estado == null ? 'active' : ''}">Todos</a>
+                    <a th:href="@{/libros(estado='activo')}" class="filter-btn" th:classappend="${param.estado != null && param.estado[0] == 'activo' ? 'active' : ''}">Activos</a>
+                </div>
+            </div>
+
+            <!-- Filtro por autor -->
+            <div class="filter-section" th:if="${autores != null && !autores.empty}">
+                <label>Filtrar por autor:</label>
+                <select onchange="if(this.value) window.location.href='/libros?autorId=' + this.value" class="filter-select">
+                    <option value="">Todos los autores</option>
+                    <option th:each="autor : ${autores}"
+                            th:value="${autor.id}"
+                            th:text="${autor.nombre + ' ' + autor.apellidos}"
+                            th:selected="${param.autorId != null && param.autorId[0] == autor.id.toString()}">
+                        Autor
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Autor</th>
+                        <th>Categoría</th>
+                        <th>Año</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${libros == null || libros.empty}">
+                        <td colspan="7" style="text-align: center;">No hay libros registrados</td>
+                    </tr>
+                    <tr th:each="libro : ${libros}">
+                        <td th:text="${libro.id}">ID</td>
+                        <td th:text="${libro.titulo}">Título</td>
+                        <td th:text="${libro.autorNombre ?: 'Sin autor'}">Autor</td>
+                        <td th:text="${libro.categoriaNombre ?: 'Sin categoría'}">Categoría</td>
+                        <td th:text="${libro.anioPublicacion}">Año</td>
+                        <td>
+                            <span th:class="${libro.activo ? 'badge badge-active' : 'badge badge-inactive'}"
+                                  th:text="${libro.activo ? 'Activo' : 'Inactivo'}">Estado</span>
+                        </td>
+                        <td class="actions">
+                            <a th:href="@{/libros/detalle/{id}(id=${libro.id})}" class="btn-action btn-view">Ver</a>
+                            <a th:href="@{/libros/editar/{id}(id=${libro.id})}" class="btn-action btn-edit">Editar</a>
+                            <form th:if="${libro.activo}" th:action="@{/libros/inactivar/{id}(id=${libro.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn-action btn-delete" onclick="return confirm('¿Está seguro de inactivar este libro?')">Inactivar</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Gestión de Biblioteca</p>
+        </div>
+    </footer>
+</body>
+</html>
